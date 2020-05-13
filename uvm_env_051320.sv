@@ -3,13 +3,13 @@
 class my_env extends uvm_env;
     `uvm_component_utils (my_env)
 
-    agent_apb   m_apb_agt;
+    agent_apb       m_apb_agt;
     agent_wishbone  m_wb_agt;
 
     env_register    m_reg_env;
-    env_analog  m_analog_env[2];
+    env_analog      m_analog_env[2];
 
-    scoreboard  m_scbd;
+    scoreboard      m_scbd;
 
     function new (string name = "my_env", uvm_component parent = null);
         super.new(name, parent);
