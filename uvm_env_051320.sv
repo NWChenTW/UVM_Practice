@@ -29,6 +29,8 @@ class my_env extends uvm_env;
     endfunction
 
     virtual function void connect_phase (uvm_phase phase);
+        super.connect_phase (phase);
+        m_apb_agt.m_apb_mon.anlysis_port.connect (m_scbd.apb_export);
     endfunction    
 
 endclass
