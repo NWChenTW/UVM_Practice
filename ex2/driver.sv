@@ -15,11 +15,11 @@ class driver extends uvm_driver #(switch_item);
     virtual task run_phase(uvm_phase phase);
         super.run_phase(phase);
         forever begin
-                switch_item m_item;
-                `uvm_info("DRV", $sformatf("Wait for item from sequencer"), UVM_LOW)
-                seq_item_port.get_next_item(m_item);
-                drive_item(m_item);
-                seq_item_port.item_done();
+            switch_item m_item;
+            `uvm_info("DRV", $sformatf("Wait for item from sequencer"), UVM_LOW)
+            seq_item_port.get_next_item(m_item);
+            drive_item(m_item);
+            seq_item_port.item_done();
         end
     endtask
 
@@ -29,6 +29,6 @@ class driver extends uvm_driver #(switch_item);
         vif.data    <= m_item.data;
 
         @(posedge vif.clk);
-        vif.vld     <= 0;
+            vif.vld     <= 0;
     endtask
 endclass

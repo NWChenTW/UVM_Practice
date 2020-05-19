@@ -29,11 +29,11 @@ class driver extends uvm_driver #(reg_item);
         vif.wr      <= m_item.wr;
         vif.wdata   <= m_item.wdata;
         @(posedge vif.clk);
-        while (!vif.ready)  begin
-            `uvm_info("DRV", "Wait until ready is high", UVM_LOW)
-            @(posedge vif.clk);
-        end
+            while (!vif.ready)  begin
+                `uvm_info("DRV", "Wait until ready is high", UVM_LOW)
+                @(posedge vif.clk);
+            end
 
-        vif.sel <= 0;
+            vif.sel <= 0;
     endtask
 endclass

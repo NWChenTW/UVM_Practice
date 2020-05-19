@@ -34,14 +34,14 @@ class monitor extends uvm_monitor;
                 item.data = vif.data;
                 `uvm_info("MON", $sformatf("T=%0t [Monitor] %s First part over", $time, tag), UVM_LOW)
                 @(posedge vif.clk);
-                sema4.put();
-                item.addr_a = vif.addr_a;
-                item.data_a = vif.data_a;
-                item.addr_b = vif.addr_b;
-                item.data_b = vif.data_b;
-                mon_analysis_port.write(item);
-                `uvm_info("MON", $sformatf("T=%t [Monitor] %s Second part over, item:", $time, tag), UVM_LOW)
-                item.print();
+                    sema4.put();
+                    item.addr_a = vif.addr_a;
+                    item.data_a = vif.data_a;
+                    item.addr_b = vif.addr_b;
+                    item.data_b = vif.data_b;
+                    mon_analysis_port.write(item);
+                    `uvm_info("MON", $sformatf("T=%t [Monitor] %s Second part over, item:", $time, tag), UVM_LOW)
+                    item.print();
             end
         end
     endtask
