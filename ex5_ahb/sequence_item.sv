@@ -10,6 +10,8 @@ class ahb_pkt extends uvm_sequence_item;
         super.new(name);
     endfunction //new()
 
+    rand byte unsigned  m_num_txfr;
+    rand bit [31:0]     m_start_addr;
     rand bit [15:0]     m_haddr;
     rand e_hburst       m_hburst;
     rand bit            m_hmastlock;
@@ -17,13 +19,16 @@ class ahb_pkt extends uvm_sequence_item;
     rand e_hsize        m_hsize;
 
     rand e_htrans       m_htrans;
-    rnad bit [31:0]     m_hwdata;
+    rand bit [31:0]     m_hwdata;
     rand e_hwrite       m_hwrite;
 
     bit [31:0]          m_hrdata;
+    rand ahb_addr_data  m_addr_data_q[$];
     e_hresp             m_hresp;
 
     `uvm_object_utils_begin(ahb_pkt)
+        `uvm_field_int (m_start_addr, UVM_PRINT)
+        `uvm_field_int (m_num_txfr, UVM_PRINT|UVM_DEC)
         `uvm_field_int (m_haddr, UVM_PRINT)
         `uvm_field_enum (e_hburst, m_hburst, UVM_PRINT)
         `uvm_field_int (m_hmastlock, UVM_PRINT)
@@ -34,13 +39,35 @@ class ahb_pkt extends uvm_sequence_item;
         `uvm_field_enum (e_hwrite, m_hwrite, UVM_PRINT)
         `uvm_field_int (m_hrdata, UVM_PRINT)
         `uvm_field_enum (e_hresp, m_hresp, UVM_PRINT)
+        `uvm_field_queue_object (m_addr_data_q, UVM_PRINT)
     `uvm_object_utils_end
 
-    constraint c_default {  m_htrans == NONSEQ;
-                            m_hsize == WORD;
-                            m_hburst == SINGLE; }
+    constraint c_default {  !(m_htrans inside {SEQ, IDLE, BUSY});
+                            m_start_addr % 4 == 0;
+                            soft m_hsize inside {[1:2]}; 
+                        }
+
+    constraint c_addr_data_q {
+        if (m_hburst == SINGLE) { m_addr_data_q.size() == 1; m_num_txfr == 1; }
+        if (m_hburst == INCR) { m_addr_data_q.size() == m_num_txfr; }
+            if ()
+    }
     
     virtual function string convert2string();
         return $sformatf("addr=0x%h write=0x%0h wdata=0x%0h rdata=0x%0h", m_haddr, m_hwrite, m_hwdata, m_hrdata);
     endfunction
 endclass //className
+
+class ahb_addr_data extends uvm_object;
+    rand bit [31:0] m_addr;
+    rand bit [31:0] m_data;
+
+    `uvm_object_utils_begin(ahb_addr_data)
+        `uvm_field_int  (m_addr, UVM_PRINT);
+        `uvm_field_int  (m_data, UVM_PRINT);
+    `uvm_object_utils_end
+
+    function new (string name = "ahb_addr_data");
+        super.new(name);
+    endfunction
+endclass
